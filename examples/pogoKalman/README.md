@@ -1,6 +1,5 @@
 
-# [Projet P-ANDROIDE - M1/S2 - 2023 - Partie calibration et filtre de Kalman](http://androide.lip6.fr/?q=node/674)
-
+# [IAR Project, M2 ANDROIDE - M2/S1 - 2024 - Automatic motor calibration algorithm using an extended Kalman filter]
 
 
 ## Pogobot Calibration 
