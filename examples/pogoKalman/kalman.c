@@ -268,8 +268,8 @@ void extendedKalmanFilter(
 
 
 void pogobot_quick_calibrate(int power, int* leftMotorVal, int* rightMotorVal) {
-  //pogobot_calibrate(power, 500, 750, 15, 50.0f, leftMotorVal, rightMotorVal);
-  pogobot_calibrate(650, 500, 750, 15, 50.0f, leftMotorVal, rightMotorVal);
+  //pogobot_calibrate(power, 500, 750, 15, leftMotorVal, rightMotorVal);
+  pogobot_calibrate(650, 500, 750, 15, leftMotorVal, rightMotorVal);
 
 }
 
@@ -285,7 +285,7 @@ void pogobot_motor_jump_set(int power, int motor) {
 
 
 //#define RESULTS_SAVED 4
-void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int* leftMotorVal, int* rightMotorVal) {
+void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, int* leftMotorVal, int* rightMotorVal) {
     float acc[3];
     float gyro[3];
     int consecutive_near_zero = 0;
@@ -426,7 +426,6 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       // //Maybe add an epsilon value, for the same reason as the gyro
       // if (acc_y > 0) { // Not really 0 - when initiated, without the kalman filter, the values are 120 +/- 50
       //     // Robot is veering to the right, reduce right motor, increase left motor
-      //     //int var = (int) (correction * acc_y); // I don't see the interest in doing this
       //     powerRight -= 5; //powerRight -= var; // and this neither 
       //     powerLeft  += 5;
       // } else if (acc_y < 0) { // Not really 0 - when initiated, without the kalman filter, the values are 120 +/- 50
@@ -444,7 +443,7 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       // #####################################################################################################################
 
     // ------------- BASIC APPROACH -------------
-    //   int c = (int)(gyro_z * correction);
+    //   int c = (int)(gyro_z * correction); // correction = 50.0 a correction factor
     //   if (powerLeft-c > 1023 || powerLeft-c < 0) {
     //     powerRight += c;
     //   } else {
