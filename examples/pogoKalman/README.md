@@ -21,22 +21,22 @@ The calibrated motor values are returned as integers through **leftMotorVal** an
 void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int method, int* leftMotorVal, int* rightMotorVal);
 ```
 >Same function as before, but gives more control to the user over its parameters.<br />
->Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration***ms before we actually collect IMU data. Then IMU data is collected during ***try_duration***ms. The experience is repeated ***number_of_tries*** times.
+>Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration***ms before we actually collect IMU data. Then IMU data is collected during ***try_duration*** ms. The experience is repeated ***number_of_tries*** times.
 >This code uses 4 different methods of calibration that can be selected using the **method** parameter.
 >
-Method 0: Gyroscope-Based Calibration  
+**Method 0**: Gyroscope-Based Calibration  
 Uses Z-axis gyroscope data to detect and correct veering.  
 Adjusts motor power based on angular velocity. 
 
-Method 1: Gyroscope Calibration with Noise Filtering  
+**Method 1**: Gyroscope Calibration with Noise Filtering  
 Introduces an epsilon threshold to ignore minor noise.  
 Stops calibration after consecutive near-zero readings.
 
-Method 2: Proportional Gyroscope Adjustment  
-Applies a correction factor to scale motor adjustments.  
+**Method 2**: Proportional Gyroscope Adjustment  
+Applies a correction factor to scale motor adjustments proportionally to the angular velocity.  
 Smoothly compensates for larger deviations.
 
-Method 3: Accelerometer-Based Calibration  
+**Method 3**: Accelerometer-Based Calibration  
 Uses Y-axis accelerometer data to detect drift.  
 Limited reliability due to high accelerometer noise.   
 
