@@ -13,8 +13,9 @@ The calibration process involves activating the motors for a short duration, obs
 ```C
 void pogobot_quick_calibrate(int power, int* leftMotorVal, int* rightMotorVal);
 ```
->Call this function to calibrate the motors of the Pogobot at roughly ***power***. The value of ***power*** has to be between 0 and 1023. However, the lower the value, the less precise the calibration will be. Keeping ***power*** between 524 and 716 is a good idea.<br />
->The values are returned as integers through ***leftMotorVal*** and ***rightMotorVal***.
+Call this function to calibrate the motors of the Pogobot at approximately **power**. The value of **power** must be between 0 and 1023. However, the closer the value is to the extremes (0 or 1023), the less precise the calibration will be. Keeping **power** between 500 and 800 is recommended.
+
+The calibrated motor values are returned as integers through **leftMotorVal** and **rightMotorVal**.
 
 ```C
 void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int* leftMotorVal, int* rightMotorVal);
