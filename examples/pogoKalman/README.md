@@ -2,10 +2,11 @@
 # [IAR Project, M2 ANDROIDE - M2/S1 - 2024 - Automatic motor calibration algorithm using an extended Kalman filter]
 
 
-## Pogobot Calibration 
+## Pogobot Motor Calibration 
 
-Functions used to calibrate the Pogobot: find the correct motor values (between 0 and 1023) which make the robot move forward without turning. Keep in mind that Pogobots are very sensitive to environmental perturbations. Dust, an uneven ground and older toothbrushes can affect the trajectory of a robot.<br />
-To calibrate the robot, we turn on the motor for a short time, check if the robot turned left or right, ajust the values of the motors accordingly and repeat a few times.
+Functions used to calibrate the Pogobot aim to determine the optimal motor values (ranging from 0 to 1023) that enable the robot to move as straight as possible without turning. It is important to note that Pogobots are highly sensitive to environmental factors. Dust, uneven terrain, or a loosely attached exoskeleton can significantly impact the robot's trajectory.
+
+The calibration process involves activating the motors for a short duration, observing whether the robot veers to the left or right, adjusting the motor values accordingly, and repeating this process several times to refine the calibration.
 
 **Functions:**
 
