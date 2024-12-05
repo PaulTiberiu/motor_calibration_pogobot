@@ -18,14 +18,27 @@ Call this function to calibrate the motors of the Pogobot at approximately **pow
 The calibrated motor values are returned as integers through **leftMotorVal** and **rightMotorVal**.
 
 ```C
-void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int* leftMotorVal, int* rightMotorVal);
+void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int method, int* leftMotorVal, int* rightMotorVal);
 ```
 >Same function as before, but gives more control to the user over its parameters.<br />
->Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration***ms before we actually collect IMU data. Then IMU data is collected during ***try_duration***ms. The experience is repeated ***number_of_tries*** times. Each time, robot_rotation****correction*** is applied to one of the motors. <br />
->In ***pogo_quick_calibrate()***, ***startup_duration*** = 500 ; ***try_duration*** = 750 ; ***number_of_tries*** = 15 and ***correction*** = 50.0f.<br />
->Be careful, if your pogobot is mounted backward, you might need to assign a negative value to ***correction***. 
+>Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration***ms before we actually collect IMU data. Then IMU data is collected during ***try_duration***ms. The experience is repeated ***number_of_tries*** times.
+>This code uses 4 different methods of calibration that can be selected using the **method** parameter.
+>
+Method 0: Gyroscope-Based Calibration  
+Uses Z-axis gyroscope data to detect and correct veering.  
+Adjusts motor power based on angular velocity. 
 
+Method 1: Gyroscope Calibration with Noise Filtering  
+Introduces an epsilon threshold to ignore minor noise.  
+Stops calibration after consecutive near-zero readings.
 
+Method 2: Proportional Gyroscope Adjustment  
+Applies a correction factor to scale motor adjustments.  
+Smoothly compensates for larger deviations.
+
+Method 3: Accelerometer-Based Calibration  
+Uses Y-axis accelerometer data to detect drift.  
+Limited reliability due to high accelerometer noise.   
 
 ## Kalman filter implementation in C
 
