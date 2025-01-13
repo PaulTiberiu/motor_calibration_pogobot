@@ -40,7 +40,7 @@ void move_light_left(void);
 
 Function that makes the robot turn slightly to the left for 5 seconds.  
 - **LED Color:** Pale pink.  
-- **Behavior:** Reduces the right motor's power to X% while keeping the left motor at full power.
+- **Behavior:** Reduces the right motor's power to 80% while keeping the left motor at full power.
 
 ```C
 void move_hard_left(void);
@@ -48,7 +48,7 @@ void move_hard_left(void);
 
 Function that makes the robot turn sharply to the left for 5 seconds.  
 - **LED Color:** Dark purple.  
-- **Behavior:** Reduces the right motor's power to X% while keeping the left motor at full power.
+- **Behavior:** Reduces the right motor's power to 50% while keeping the left motor at full power.
 
 
 ```C
@@ -65,7 +65,7 @@ void move_light_right(void);
 
 Function that makes the robot turn slightly to the right for 5 seconds.  
 - **LED Color:** Baby blue.  
-- **Behavior:** Reduces the left motor's power to X% while keeping the right motor at full power.
+- **Behavior:** Reduces the left motor's power to 80% while keeping the right motor at full power.
 
 ```C
 void move_hard_right(void);
@@ -73,7 +73,7 @@ void move_hard_right(void);
 
 Function that makes the robot turn sharply to the right for 5 seconds.  
 - **LED Color:** Dark baby blue.  
-- **Behavior:** Reduces the left motor's power to X% while keeping the right motor at full power.
+- **Behavior:** Reduces the left motor's power to 50% while keeping the right motor at full power.
 
 ```C
 void move_straight_right(void);
