@@ -9,8 +9,8 @@ This folder contains functions used to demonstrate a calibrated robot. The demon
 
 **Functions:**
 
-```C
-void pogobot_delay_ms(uint32_t ms);```
+
+void pogobot_delay_ms(uint32_t ms);
 
 Function that allows a delay during the demonstration code.
 
