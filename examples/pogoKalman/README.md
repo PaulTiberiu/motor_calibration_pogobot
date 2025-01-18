@@ -6,39 +6,29 @@
 
 Functions used to calibrate the Pogobot aim to determine the optimal motor values (ranging from 0 to 1023) that enable the robot to move as straight as possible without turning. It is important to note that Pogobots are highly sensitive to environmental factors. Dust, uneven terrain, or a loosely attached exoskeleton can significantly impact the robot's trajectory.
 
-The calibration process involves activating the motors for a short duration, observing whether the robot veers to the left or right, adjusting the motor values accordingly, and repeating this process several times to refine the calibration.
+The calibration process involves activating the motors for a short duration, observing whether the robot veers to the left or right using an angular velocity sensor, adjusting the motor values accordingly, and repeating this process several times to refine the calibration.
 
 **Functions:**
 
 ```C
 void pogobot_quick_calibrate(int power, int* leftMotorVal, int* rightMotorVal);
 ```
-Call this function to calibrate the motors of the Pogobot at approximately **power**. The value of **power** must be between 0 and 1023. However, the closer the value is to the extremes (0 or 1023), the less precise the calibration will be. Keeping **power** between 500 and 800 is recommended.
+>Call this function to calibrate the motors of the Pogobot at approximately **power** (the calibration starts at the given motor **power** value). The value of **power** must be between 0 and 1023. However, the closer the value is to the extremes (0 or 1023), the less precise the calibration will be. Keeping **power** between 500 and 800 is recommended.
 
 The calibrated motor values are returned as integers through **leftMotorVal** and **rightMotorVal**.
 
 ```C
-void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int method, int* leftMotorVal, int* rightMotorVal);
+void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, int* leftMotorVal, int* rightMotorVal);
 ```
->Same function as before, but gives more control to the user over its parameters.<br />
->Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration***ms before we actually collect IMU data. Then IMU data is collected during ***try_duration*** ms. The experience is repeated ***number_of_tries*** times.
->This code uses 4 different methods of calibration that can be selected using the **method** parameter.
->
-**Method 0**: Gyroscope-Based Calibration  
-Uses Z-axis gyroscope data to detect and correct veering.  
-Adjusts motor power based on angular velocity. 
 
-**Method 1**: Gyroscope Calibration with Noise Filtering  
-Introduces an epsilon threshold to ignore minor noise.  
-Stops calibration after consecutive near-zero readings.
+>Call this function to calibrate the motors of the Pogobot at roughly ***power***. During each try, the motors are turned on for ***startup_duration*** ms before we actually collect IMU data (Inertial Measurment Unit). Then IMU data is collected during ***try_duration*** ms. The experience is repeated ***number_of_tries*** times. We recommend a value of 2 seconds for the ***try_duration*** in order to have a calibration as stable as possible.
 
-**Method 2**: Proportional Gyroscope Adjustment  
-Applies a correction factor to scale motor adjustments proportionally to the angular velocity.  
-Smoothly compensates for larger deviations.
+**Limitations:**
+Note that the calibration isn't even foolproof. It only finds optimal motor values, but sometimes no combination of values on the left and right motor can make a Pogobot move in a straight line. In addition, terrain imperfections can mess up the calibration, or even the robot path after the calibration is complete. Finally, robots can decalibrate over time.
 
-**Method 3**: Accelerometer-Based Calibration  
-Uses Y-axis accelerometer data to detect drift.  
-Limited reliability due to high accelerometer noise.   
+**NB**: After the calibration performed in the main.c script, the calibrated motor values are stored in the robot's memory. The robot can be turned off and on again, and in our demonstration code in the DemoCalibration folder, we have two functions that allow us to read the stored motor values.
+
+_________________________________________________________________________________________________________   
 
 ## Kalman filter implementation in C
 
