@@ -79,7 +79,7 @@ calibrate the pogobot's motor values with the Kalman filter; durations in millis
     - leftMotorVal: pointer to save the data of the left motor power
     - rightMotorValue: pointer to save the data of the right motor power
 */
-void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int method, int* leftMotorVal, int* rightMotorVal);
+void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, int* leftMotorVal, int* rightMotorVal);
 
 // calibrate with fewer parameters, duration in milliseconds
 void pogobot_quick_calibrate(int power, int* leftMotorVal, int* rightMotorVal);
