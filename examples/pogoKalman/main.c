@@ -11,8 +11,15 @@ int main(int argc, char* argv[]) {
     int leftMotorVal;
     int rightMotorVal;
 
-    pogobot_quick_calibrate(700, &leftMotorVal, &rightMotorVal);
+    pogobot_quick_calibrate(650, &leftMotorVal, &rightMotorVal);
     printf("Calibration ok : powerLeft = %d ; powerRight = %d\n", leftMotorVal, rightMotorVal);
+
+    int16_t motorPowers[3] = {rightMotorVal, leftMotorVal, 0};
+    if (pogobot_motor_power_mem_set(motorPowers) == 0) {
+        printf("Motor powers saved to memory.\n");
+    } else {
+        printf("Failed to save motor powers.\n");
+    }
 
     pogobot_motor_jump_set(motorL, leftMotorVal);
     pogobot_motor_jump_set(motorR, rightMotorVal); 
