@@ -367,7 +367,7 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
           // Robot is veering to the right, reduce right motor, increase left motor
           powerRight -= 5;
           powerLeft  += 5;
-      } else if(gyro_z < 0) {// We use epsilon because, even if the robot stays still, the gyro values are not 0
+      } else if(gyro_z < 0) {
           // Robot is veering to the left, reduce left motor, increase right motor
           powerLeft  -= 5;
           powerRight += 5;
