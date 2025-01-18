@@ -28,7 +28,7 @@ Note that the calibration isn't even foolproof. It only finds optimal motor valu
 
 **NB**: After the calibration performed in the main.c script, the calibrated motor values are stored in the robot's memory. The robot can be turned off and on again, and in our demonstration code in the DemoCalibration folder, we have two functions that allow us to read the stored motor values.
 
-_________________________________________________________________________________________________________   
+_________________________________________________________________________________________________________ _________________________________________________________________________________________________________ _________________________________________________________________________________________________________
 
 ## Kalman filter implementation in C
 
