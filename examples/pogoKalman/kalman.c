@@ -1,4 +1,3 @@
-
 #include "pogobot.h"
 #include "kalman.h"
 #include "display.h"
@@ -268,8 +267,7 @@ void extendedKalmanFilter(
 
 
 void pogobot_quick_calibrate(int power, int* leftMotorVal, int* rightMotorVal) {
-  pogobot_calibrate(650, 500, 750, 15, 50.0f, 1, leftMotorVal, rightMotorVal);
-
+  pogobot_calibrate(650, 500, 2000, 15, leftMotorVal, rightMotorVal); //750 ms for a calibration step
 }
 
 void pogobot_motor_jump_set(int power, int motor) {
@@ -284,10 +282,9 @@ void pogobot_motor_jump_set(int power, int motor) {
 
 
 //#define RESULTS_SAVED 4
-void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, float correction, int method, int* leftMotorVal, int* rightMotorVal) {
+void pogobot_calibrate(int power, int startup_duration, int try_duration, int number_of_tries, int* leftMotorVal, int* rightMotorVal) {
     float acc[3];
     float gyro[3];
-    int consecutive_near_zero = 0;
 
     // kalman arguments 
     float obs_vector_z_k[1][6];
@@ -325,7 +322,6 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       // STARTUP
       pogobot_motor_jump_set(motorR, powerRight);
       pogobot_motor_jump_set(motorL, powerLeft);
-      //pogobot_motor_jump_set(motorR, powerRight);
       msleep(startup_duration);
       printf("\nmotorLeft=%d ; motorRight=%d\n", powerLeft, powerRight);
 
@@ -333,6 +329,7 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       // MOVE, COLLECT DATA AND APPLY KALMAN
       time_reference_t timer;
       pogobot_stopwatch_reset(&timer);
+
       while (pogobot_stopwatch_get_elapsed_microseconds(&timer) / 1000 < try_duration) {
           pogobot_imu_read(acc, gyro);
           combine_arrays(*obs_vector_z_k, acc, gyro, 3, 3);
@@ -359,110 +356,23 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       // CORRECT MOTOR VALUES
       pogobot_motor_set(motorL, motorStop);
       pogobot_motor_set(motorR, motorStop);
-     
 
-      //######################################################################################################################
-      //APPROACH 0 => USE THE GYRO IN ORDER TO DO THE CALIBRATION => SHOULD MAKE THE ROBOT GO STRAIGHT
-      //This approach is the most promising
-      // Even if the robot is moving really straight, the gyro values are not 0 even when they pass through the kalman filter due to the motor vibration and the noise
-      if(method == 0){
-        float gyro_z = state_estimate_k[0][5];
-        print_float(gyro_z, 10000);
-        if (gyro_z == 0){
-          return;
-        }
-        //Check the direction of the rotation
-        if(gyro_z > 0) {
-            // Robot is veering to the right, reduce right motor, increase left motor
-            powerRight -= 5;
-            powerLeft  += 5;
-        } else if(gyro_z < 0) {// We use epsilon because, even if the robot stays still, the gyro values are not 0
-            // Robot is veering to the left, reduce left motor, increase right motor
-            powerLeft  -= 5;
-            powerRight += 5;
-        }
+      float gyro_z = state_estimate_k[0][5];
+      print_float(gyro_z, 10000);
+      if (gyro_z == 0){
+        return;
       }
-      //######################################################################################################################
-
-      //######################################################################################################################
-      //APPROACH 1 => SAME AS THE APPROACH 0 BUT USING AN EPSILON FACTOR DUE TO THE NOISE OF THE GYRO
-      if(method == 1){
-        float gyro_z = state_estimate_k[0][5];
-        float epsilon = 0.1;
-        print_float(gyro_z, 10000);
-        float abs_gyro_z = (gyro_z < 0.0f) ? -gyro_z : gyro_z; // fabs function
-        int stop_calib = 3; // change this parameter to stop the calibration
-        if (abs_gyro_z < epsilon) {
-          printf("gyro_z near zero\n");
-          consecutive_near_zero++;
-          printf("consecutive_near_zero = %d\n", consecutive_near_zero);
-          if (consecutive_near_zero >= stop_calib) {
-              printf("Calibration complete: gyro_z near zero for stop_calib consecutive readings.\n");
-              *leftMotorVal  = powerLeft;
-              *rightMotorVal = powerRight;
-              return;
-          }
-        } else {
-            consecutive_near_zero = 0; // Reset the counter if not near zero
-        }
-        //Check the direction of the rotation
-        //if(gyro_z > 0) {// We use epsilon because, even if the robot stays still, the gyro values are not 0
-        if (gyro_z > epsilon) {
-            // Robot is veering to the right, reduce right motor, increase left motor
-            powerRight -= 5;
-            powerLeft  += 5;
-        //} else if(gyro_z < 0) {// We use epsilon because, even if the robot stays still, the gyro values are not 0
-        } else if (gyro_z < -epsilon) {
-            // Robot is veering to the left, reduce left motor, increase right motor
-            powerLeft  -= 5;
-            powerRight += 5;
-        }
+      //Check the direction of the rotation
+      if(gyro_z > 0) {
+          // Robot is veering to the right, reduce right motor, increase left motor
+          powerRight -= 5;
+          powerLeft  += 5;
+      } else if(gyro_z < 0) {// We use epsilon because, even if the robot stays still, the gyro values are not 0
+          // Robot is veering to the left, reduce left motor, increase right motor
+          powerLeft  -= 5;
+          powerRight += 5;
       }
-      //######################################################################################################################
-
-      //######################################################################################################################
-      //APPROACH 2 => SAME AS THE APPROACH 0 BUT USING A CORRECTION FACTOR IN ORDER TO INCREASE THE MOTOR POWER PROPORTIONALLY TO THE GYRO VALUE
-      if (method == 2){
-        float gyro_z = state_estimate_k[0][5];
-        int c = (int)(gyro_z * correction); // correction factor
-        float abs_gyro_z = (gyro_z < 0.0f) ? -gyro_z : gyro_z; // fabs function
-        float epsilon = 0.1; // epsilon value to consider the gyro as 0
-        if (gyro_z > 0) {
-          powerRight -= c;
-          powerLeft += c;
-        } 
-        if (gyro_z < 0){
-          powerLeft -= c;
-          powerRight += c;
-        }
-        if (gyro_z == 0 || abs_gyro_z < epsilon){
-          *leftMotorVal  = powerLeft;
-          *rightMotorVal = powerRight;
-          return;
-        }
-      }
-      //######################################################################################################################
- 
-      //######################################################################################################################
-      //APPROACH 3 => USE THE HORIZONTAL ACCELERATION IN ORDER TO DO THE CALIBRATION
-      // Tested and does not work at all due to the noise of the accelerometer
-      if (method == 3){
-        float acc_y = state_estimate_k[0][1];
-        print_float(acc_y, 10000);
-        if (acc_y > 0) { // Not really 0 - when initiated, without the kalman filter, the values are 120 +/- 50
-            // Robot is veering to the right, reduce right motor, increase left motor
-            //int var = (int) (correction * acc_y); // I don't see the interest in doing this
-            powerRight -= 5; //powerRight -= var; // and this neither 
-            powerLeft  += 5;
-        } else if (acc_y < 0) { // Not really 0 - when initiated, without the kalman filter, the values are 120 +/- 50
-            // Robot is veering to the left, reduce left motor, increase right motor
-            powerLeft  -= 5;
-            powerRight += 5;
-        }
-      }
-      //######################################################################################################################
-
-
+        
       // Ensure motor values stay within valid range
       if (powerLeft > 800) powerLeft = 800;
       if (powerLeft < 500) powerLeft = 500;
@@ -473,9 +383,10 @@ void pogobot_calibrate(int power, int startup_duration, int try_duration, int nu
       msleep(250);
     }
 
-    //printf("Calibration complete:\n\tLeft: %d\n\tRight: %d\n", powerLeft, powerRight);
+    printf("Calibration complete:\n\tLeft: %d\n\tRight: %d\n", powerLeft, powerRight);
     *leftMotorVal  = powerLeft;
     *rightMotorVal = powerRight;
+
     return;
 }
 
