@@ -49,7 +49,7 @@ void move_light_left(void) {
     uint16_t motorLeftPower = get_left_motor_power();
     uint16_t motorRightPower = get_right_motor_power();
     pogobot_motor_power_set(motorL, motorLeftPower);
-    pogobot_motor_power_set(motorR, (uint16_t) motorRightPower * 0.8);
+    pogobot_motor_power_set(motorR, (uint16_t) motorRightPower * 0.9);
     pogobot_delay_ms(duration);
     pogobot_motor_power_set(motorL, 0);
     pogobot_motor_power_set(motorR, 0);
@@ -62,7 +62,7 @@ void move_hard_left(void) {
     uint16_t motorLeftPower = get_left_motor_power();
     uint16_t motorRightPower = get_right_motor_power();
     pogobot_motor_power_set(motorL, motorLeftPower);
-    pogobot_motor_power_set(motorR, (uint16_t) motorRightPower * 0.5);
+    pogobot_motor_power_set(motorR, (uint16_t) motorRightPower * 0.75);
     pogobot_delay_ms(duration);
     pogobot_motor_power_set(motorL, 0);
     pogobot_motor_power_set(motorR, 0);
@@ -86,7 +86,7 @@ void move_light_right(void) {
     pogobot_led_setColor(0, 255, 255); // Baby blue
     uint16_t motorLeftPower = get_left_motor_power();
     uint16_t motorRightPower = get_right_motor_power();
-    pogobot_motor_power_set(motorL, (uint16_t) motorLeftPower * 0.8);
+    pogobot_motor_power_set(motorL, (uint16_t) motorLeftPower * 0.9);
     pogobot_motor_power_set(motorR, motorRightPower);
     pogobot_delay_ms(duration);
     pogobot_motor_power_set(motorL, 0);
@@ -99,7 +99,7 @@ void move_hard_right(void) {
     pogobot_led_setColor(0, 153, 153); // Dark baby blue
     uint16_t motorLeftPower = get_left_motor_power();
     uint16_t motorRightPower = get_right_motor_power();
-    pogobot_motor_power_set(motorL, (uint16_t) motorLeftPower * 0.5);
+    pogobot_motor_power_set(motorL, (uint16_t) motorLeftPower * 0.75);
     pogobot_motor_power_set(motorR, motorRightPower);
     pogobot_delay_ms(duration);
     pogobot_motor_power_set(motorL, 0);
